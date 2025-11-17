@@ -1,0 +1,49 @@
+.marks-container {
+  width: 75%;                  /* Same width as Fees pages */
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: "Poppins", sans-serif;
+}
+
+.marks-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+.no-marks {
+  text-align: center;
+  color: #555;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.marks-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.marks-table th {
+  background: #1e88ff;
+  color: white;
+  padding: 14px;
+  font-size: 17px;
+  text-align: center;
+}
+
+.marks-table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+}
+
+.marks-table tr:hover {
+  background: #f5f8ff;
+  transition: 0.2s;
+}

@@ -1,0 +1,19 @@
+.smoke-container {
+  position: relative;
+}
+
+.secret-key-field {
+  animation: fadeIn 0.6s ease;
+}
+
+.smoke {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  right: 0;
+  height: 25px;
+  background: url('https://i.ibb.co/YcP1KJ8/smoke.gif');
+  background-size: cover;
+  pointer-events: none;
+  opacity: 0.6;
+}

@@ -1,0 +1,95 @@
+.sidebar {
+  background: #0d0d0d;
+  color: #fff;
+  min-height: 100vh;
+  width: 250px;
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+/* Collapse button */
+.collapse-btn {
+  background: transparent;
+  border: none;
+  color: #1e88ff;
+  font-size: 22px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+/* Title */
+.side-title {
+  text-align: center;
+  font-size: 22px;
+  margin: 15px 0 25px;
+  color: #1e88ff;
+}
+
+/* Menu */
+.side-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.side-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px;
+  margin-bottom: 8px;
+  text-decoration: none;
+  color: #d3d3d3;
+  border-radius: 8px;
+  transition: 0.25s;
+}
+
+.side-link span {
+  font-size: 15px;
+}
+
+.side-link:hover {
+  background: #1e1e1e;
+  color: #1e88ff;
+  transform: translateX(3px);
+}
+
+/* "Management" heading */
+.section-title {
+  margin: 15px 0 8px 4px;
+  font-size: 13px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Footer (Logout) */
+.side-footer {
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ff5252;
+  background: transparent;
+  color: #ff5252;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.logout-btn:hover {
+  background: #ff5252;
+  color: white;
+}

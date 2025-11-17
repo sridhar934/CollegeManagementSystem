@@ -1,0 +1,81 @@
+/* Page wrapper – centers the card in content area */
+.form-page-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  width: 100%;
+}
+
+/* Main card */
+.form-card {
+  width: 45%;                      /* similar width to Add Fees */
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+/* Title + subtitle */
+.form-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1e88ff;
+}
+
+.form-subtitle {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 24px;
+}
+
+/* Labels + inputs */
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  font-size: 15px;
+  margin-bottom: 18px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+  border-color: #1e88ff;
+  box-shadow: 0 0 0 2px rgba(30, 136, 255, 0.15);
+}
+
+/* Button */
+.form-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #1e88ff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.form-btn:hover {
+  background: #006aff;
+  transform: translateY(-1px);
+}
+
+/* Message text */
+.form-message {
+  margin-top: 16px;
+  font-size: 14px;
+}

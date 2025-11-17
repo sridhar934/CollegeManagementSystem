@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 🚀 Railway Hosting Port
+builder.WebHost.UseUrls("http://0.0.0.0:8080");
+
 var config = builder.Configuration;
 
 // 1️⃣ CORS — allow React app
@@ -26,7 +29,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     )
 );
 
-// 3️⃣ Add HttpClient for SUPABASE (required for Admin user creation)
+// 3️⃣ Add HttpClient for SUPABASE 
 builder.Services.AddHttpClient("supabase", client =>
 {
     var supabaseUrl = config["Supabase:Url"];

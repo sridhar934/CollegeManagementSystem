@@ -3,49 +3,52 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Railway Hosting Port
+// Bind Render port
 builder.WebHost.UseUrls("http://0.0.0.0:8080");
 
-var config = builder.Configuration;
-
-// CORS
+// CORS Setup
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:3000")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
-        });
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:3000", // React local
+                "https://collegemanagementsystem-1-009t.onrender.com" // Your Render backend
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
-// Database
+// DB Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
-        config.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(config.GetConnectionString("DefaultConnection"))
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     )
 );
 
-// Supabase HttpClient
+// HttpClient for Supabase
 builder.Services.AddHttpClient("supabase", client =>
 {
-    var supabaseUrl = config["Supabase:Url"];
+    var supabaseUrl = builder.Configuration["Supabase:Url"];
     if (!string.IsNullOrEmpty(supabaseUrl))
         client.BaseAddress = new Uri(supabaseUrl);
+
+    client.DefaultRequestHeaders.Accept.Clear();
+    client.DefaultRequestHeaders.Accept.Add(
+        new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 });
 
-// Controllers
+// Add Controllers
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Middleware
 app.UseHttpsRedirection();
-app.UseCors("AllowReactApp");
-
+app.UseCors("AllowFrontend");
 app.MapControllers();
 
 app.Run();

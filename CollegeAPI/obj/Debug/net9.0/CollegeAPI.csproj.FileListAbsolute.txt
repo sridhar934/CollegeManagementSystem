@@ -119,3 +119,4 @@ C:\Users\HP\Downloads\CollegeManagementSystem\CollegeAPI\obj\Debug\net9.0\refint
 C:\Users\HP\Downloads\CollegeManagementSystem\CollegeAPI\obj\Debug\net9.0\CollegeAPI.pdb
 C:\Users\HP\Downloads\CollegeManagementSystem\CollegeAPI\obj\Debug\net9.0\CollegeAPI.genruntimeconfig.cache
 C:\Users\HP\Downloads\CollegeManagementSystem\CollegeAPI\obj\Debug\net9.0\ref\CollegeAPI.dll
+C:\Users\HP\Downloads\CollegeManagementSystem\CollegeAPI\obj\Debug\net9.0\CollegeAPI.sourcelink.json

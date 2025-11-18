@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./AddMarks.css";
+
 
 export default function AddMarks() {
   const [students, setStudents] = useState([]);

@@ -3,21 +3,21 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 🚀 Railway Hosting Port
+// Railway/Render hosting port
 builder.WebHost.UseUrls("http://0.0.0.0:8080");
 
 var config = builder.Configuration;
 
-// 1️⃣ CORS — allow React app
+// ✅ 1️⃣ CORS — allow ALL origins (React + Render frontend)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
+    options.AddPolicy("AllowAnyFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
+            policy
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
         });
 });
 
@@ -50,9 +50,10 @@ var app = builder.Build();
 
 // Middleware
 app.UseHttpsRedirection();
-app.UseCors("AllowReactApp");
 
-// Map controller routes
+// 🚀 Enable global CORS
+app.UseCors("AllowAnyFrontend");
+
 app.MapControllers();
 
 app.Run();

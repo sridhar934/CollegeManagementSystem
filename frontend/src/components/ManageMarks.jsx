@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./ManageMarks.css";
+import api from "../api"; // ✅ axios instance
 
 export default function ManageMarks() {
   const [marks, setMarks] = useState([]);
@@ -7,50 +8,52 @@ export default function ManageMarks() {
   const [newScore, setNewScore] = useState("");
   const [newSubject, setNewSubject] = useState("");
 
-  const loadMarks = () => {
-    fetch("http://localhost:5059/api/mark")
-      .then((res) => res.json())
-      .then((data) => setMarks(data))
-      .catch(() => setMarks([]));
+  // Load marks
+  const loadMarks = async () => {
+    try {
+      const res = await api.get("/mark"); // ✅ updated
+      setMarks(res.data);
+    } catch (err) {
+      console.error("Error loading marks", err);
+      setMarks([]);
+    }
   };
 
   useEffect(() => {
     loadMarks();
   }, []);
 
+  // Update mark
   const updateMark = async () => {
-    const updated = {
-      id: editMark.id,
-      studentName: editMark.studentName,
-      subject: newSubject,
-      score: newScore
-    };
+    try {
+      const updated = {
+        id: editMark.id,
+        studentName: editMark.studentName,
+        subject: newSubject,
+        score: Number(newScore),
+      };
 
-    const res = await fetch(`http://localhost:5059/api/mark/${editMark.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updated)
-    });
+      await api.put(`/mark/${editMark.id}`, updated); // ✅ updated
 
-    if (res.ok) {
       alert("Mark updated!");
       setEditMark(null);
       loadMarks();
-    } else {
+    } catch (err) {
       alert("Update failed!");
+      console.error(err);
     }
   };
 
+  // Delete mark
   const deleteMark = async (id) => {
     if (!window.confirm("Are you sure?")) return;
 
-    const res = await fetch(`http://localhost:5059/api/mark/${id}`, {
-      method: "DELETE"
-    });
-
-    if (res.ok) {
+    try {
+      await api.delete(`/mark/${id}`); // ✅ updated
       alert("Mark deleted");
       loadMarks();
+    } catch (err) {
+      console.error("Delete failed:", err);
     }
   };
 

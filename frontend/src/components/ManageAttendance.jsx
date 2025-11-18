@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import api from "../api"; // ✅ axios instance
 
 export default function ManageAttendance() {
   const [students, setStudents] = useState([]);
@@ -6,10 +7,10 @@ export default function ManageAttendance() {
   const [status, setStatus] = useState("Present");
   const [message, setMessage] = useState("");
 
+  // Load Students
   useEffect(() => {
-    fetch("http://localhost:5059/api/student")
-      .then((res) => res.json())
-      .then((data) => setStudents(data))
+    api.get("/student")
+      .then((res) => setStudents(res.data))
       .catch((err) => console.log(err));
   }, []);
 
@@ -25,16 +26,12 @@ export default function ManageAttendance() {
 
     const attendance = {
       studentId: Number(studentId),
-      studentName: selectedStudent.name,
+      studentName: selectedStudent?.name,
       status,
-      date: new Date().toISOString()
+      date: new Date().toISOString(),
     };
 
-    await fetch("http://localhost:5059/api/attendance", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(attendance),
-    });
+    await api.post("/attendance", attendance);
 
     setMessage("Attendance Saved!");
     setStudentId("");
@@ -45,7 +42,7 @@ export default function ManageAttendance() {
     <div style={{ padding: "20px" }}>
       <h2>Manage Attendance</h2>
 
-      <label>Student:</label><br />
+      <label>Student:</label><br/>
       <select value={studentId} onChange={(e) => setStudentId(e.target.value)}>
         <option value="">-- Select Student --</option>
         {students.map((s) => (
@@ -57,7 +54,7 @@ export default function ManageAttendance() {
 
       <br /><br />
 
-      <label>Status:</label><br />
+      <label>Status:</label><br/>
       <select value={status} onChange={(e) => setStatus(e.target.value)}>
         <option value="Present">Present</option>
         <option value="Absent">Absent</option>

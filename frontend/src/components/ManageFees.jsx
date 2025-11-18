@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./TableStyles.css";
+import api from "../api"; // ✅ axios instance
 
 export default function ManageFees() {
   const [students, setStudents] = useState([]);
@@ -11,25 +12,22 @@ export default function ManageFees() {
 
   // Load Students
   useEffect(() => {
-    fetch("http://localhost:5059/api/student")
-      .then((res) => res.json())
-      .then((data) => setStudents(data))
+    api.get("/student") // ✅ Updated
+      .then((res) => setStudents(res.data))
       .catch((err) => console.error(err));
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    fetch("http://localhost:5059/api/fees", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(feeData),
-    })
-      .then(() => {
-        alert("Fee Added Successfully!");
-        window.location.reload();
-      })
-      .catch((err) => console.error(err));
+    try {
+      await api.post("/fees", feeData); // ✅ Updated API
+      alert("Fee Added Successfully!");
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      alert("Error adding fee");
+    }
   };
 
   return (

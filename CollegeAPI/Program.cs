@@ -3,25 +3,25 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Railway/Render hosting port
+// Railway Hosting Port
 builder.WebHost.UseUrls("http://0.0.0.0:8080");
 
 var config = builder.Configuration;
 
-// ✅ 1️⃣ CORS — allow ALL origins (React + Render frontend)
+// CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAnyFrontend",
+    options.AddPolicy("AllowReactApp",
         policy =>
         {
-            policy
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
         });
 });
 
-// 2️⃣ Database Connection
+// Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
         config.GetConnectionString("DefaultConnection"),
@@ -29,30 +29,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     )
 );
 
-// 3️⃣ Add HttpClient for SUPABASE 
+// Supabase HttpClient
 builder.Services.AddHttpClient("supabase", client =>
 {
     var supabaseUrl = config["Supabase:Url"];
-
     if (!string.IsNullOrEmpty(supabaseUrl))
         client.BaseAddress = new Uri(supabaseUrl);
-
-    client.DefaultRequestHeaders.Accept.Clear();
-    client.DefaultRequestHeaders.Accept.Add(
-        new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
-    );
 });
 
-// 4️⃣ Add controllers
+// Controllers
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
 // Middleware
 app.UseHttpsRedirection();
-
-// 🚀 Enable global CORS
-app.UseCors("AllowAnyFrontend");
+app.UseCors("AllowReactApp");
 
 app.MapControllers();
 

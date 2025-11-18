@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./StudentForm.css";
+import api from "../api";  // ✅ use shared axios instance
 
 export default function AddStudent() {
   const [name, setName] = useState("");
@@ -18,16 +19,7 @@ export default function AddStudent() {
     };
 
     try {
-      const res = await fetch("http://localhost:5059/api/student", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(studentData),
-      });
-
-      if (!res.ok) {
-        setMessage("Failed to add student");
-        return;
-      }
+      const res = await api.post("/student", studentData); // ✅ API fixed
 
       setMessage("✅ Student added successfully!");
 
@@ -35,6 +27,7 @@ export default function AddStudent() {
       setName("");
       setRollNo("");
       setCourse("");
+
     } catch (err) {
       console.error(err);
       setMessage("❌ Error adding student");

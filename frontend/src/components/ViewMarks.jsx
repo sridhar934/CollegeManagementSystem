@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
 import "./ViewMarks.css";
+import api from "../api"; // ✅ use axios API instance
 
 export default function ViewMarks() {
   const [marks, setMarks] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5059/api/mark")
-      .then((res) => res.json())
-      .then((data) => setMarks(data))
-      .catch(() => setMarks([]));
+    loadMarks();
   }, []);
+
+  async function loadMarks() {
+    try {
+      const res = await api.get("/mark"); // ✅ updated API URL
+      setMarks(res.data);
+    } catch (err) {
+      console.error("Error loading marks:", err);
+      setMarks([]);
+    }
+  }
 
   return (
     <div className="marks-container">

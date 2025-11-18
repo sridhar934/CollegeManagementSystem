@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import api from "../api";  // ✅ use shared axios instance
 import "./Fees.css";
 
 export default function AddFees() {
@@ -8,17 +9,18 @@ export default function AddFees() {
 
   // Load students when page opens
   useEffect(() => {
-    fetch("http://localhost:5059/api/student")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("STUDENTS LOADED:", data);
-        setStudents(Array.isArray(data) ? data : []);
-      })
-      .catch((err) => {
-        console.log("Error loading students:", err);
-        setStudents([]);
-      });
+    loadStudents();
   }, []);
+
+  async function loadStudents() {
+    try {
+      const res = await api.get("/student");  // ✅ UPDATED
+      setStudents(res.data);
+    } catch (err) {
+      console.error("Error loading students:", err);
+      setStudents([]);
+    }
+  }
 
   const submitFee = async (e) => {
     e.preventDefault();
@@ -29,17 +31,13 @@ export default function AddFees() {
       status: "Pending"
     };
 
-    const res = await fetch("http://localhost:5059/api/fees", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(fee)
-    });
-
-    if (res.ok) {
+    try {
+      await api.post("/fees", fee);  // ✅ UPDATED
       alert("Fee added successfully!");
       setStudentId("");
       setAmount("");
-    } else {
+    } catch (err) {
+      console.error(err);
       alert("Error adding fee");
     }
   };
@@ -58,7 +56,7 @@ export default function AddFees() {
             <option value="">-- Select Student --</option>
 
             {students.map((s) => (
-              <option key={s.id} value={s.id}>
+              <option key={s.id} value={s.id}> {/* ✅ s.studentId → s.id */}
                 {s.name}
               </option>
             ))}

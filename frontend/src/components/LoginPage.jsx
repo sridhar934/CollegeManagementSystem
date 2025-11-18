@@ -18,17 +18,22 @@ export default function LoginPage({ onLogin }) {
 
     try {
       if (isSignup) {
+        // Staff sign-up security check
         if (role === "staff" && secretKey !== "STAFF2025") {
           setError("Invalid Staff Secret Key");
           return;
         }
 
+        // Supabase create account
         await signUpUser(email, password, role);
       } else {
+        // Supabase login
         await signInUser(email, password);
       }
 
-      onLogin();
+      // Pass the role up to App.js
+      onLogin(role);
+
     } catch (err) {
       setError(err.message);
     }
@@ -39,7 +44,9 @@ export default function LoginPage({ onLogin }) {
       <ThreeBackground />
 
       <div className="login-card">
-        <h2 className="title">{isSignup ? "Create Account" : "Welcome Back"}</h2>
+        <h2 className="title">
+          {isSignup ? "Create Account" : "Welcome Back"}
+        </h2>
 
         <form onSubmit={handleSubmit} className="form">
 
@@ -51,6 +58,7 @@ export default function LoginPage({ onLogin }) {
               placeholder="Enter Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
@@ -62,10 +70,11 @@ export default function LoginPage({ onLogin }) {
               placeholder="Enter Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
 
-          {/* Role Buttons */}
+          {/* Role Selection */}
           <label className="role-label">Select Role</label>
           <div className="role-select">
             <button
@@ -98,7 +107,6 @@ export default function LoginPage({ onLogin }) {
             </div>
           )}
 
-          {/* Submit Button */}
           <button className="login-btn" type="submit">
             {isSignup ? "Register" : "Login"}
           </button>
@@ -106,7 +114,10 @@ export default function LoginPage({ onLogin }) {
 
         <p className="switch-text">
           {isSignup ? "Already have an account?" : "New user?"}{" "}
-          <span className="switch-link" onClick={() => setIsSignup(!isSignup)}>
+          <span
+            className="switch-link"
+            onClick={() => setIsSignup(!isSignup)}
+          >
             {isSignup ? "Login" : "Sign Up"}
           </span>
         </p>

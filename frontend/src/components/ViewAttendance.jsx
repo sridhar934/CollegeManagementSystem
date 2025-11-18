@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
 import "./TableStyles.css";
+import api from "../api"; // ✅ use axios instance
 
 export default function ViewAttendance() {
   const [attendance, setAttendance] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5059/api/attendance")
-      .then((res) => res.json())
-      .then((data) => setAttendance(data))
-      .catch((err) => console.error(err));
+    loadAttendance();
   }, []);
+
+  async function loadAttendance() {
+    try {
+      const res = await api.get("/attendance");
+      setAttendance(res.data);
+    } catch (err) {
+      console.error("Error loading attendance:", err);
+      setAttendance([]);
+    }
+  }
 
   return (
     <div className="table-box">

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./AddCourses.css";
+import api from "../api";   // ✅ use shared axios instance
 
 export default function AddCourses() {
   const [courseName, setCourseName] = useState("");
@@ -11,18 +12,15 @@ export default function AddCourses() {
 
     const course = { courseName, courseCode, description };
 
-    const res = await fetch("http://localhost:5059/api/course", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(course),
-    });
-
-    if (res.ok) {
+    try {
+      await api.post("/course", course);   // ✅ API updated
       alert("Course Added Successfully!");
+
       setCourseName("");
       setCourseCode("");
       setDescription("");
-    } else {
+    } catch (err) {
+      console.error(err);
       alert("Failed to add course");
     }
   };

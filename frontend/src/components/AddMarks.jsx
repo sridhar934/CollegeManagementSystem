@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./AddMarks.css";
-
+import api from "../api";   // ✅ use shared axios instance
 
 export default function AddMarks() {
   const [students, setStudents] = useState([]);
@@ -13,12 +12,12 @@ export default function AddMarks() {
 
   useEffect(() => {
     loadStudents();
-    loadCourses();   // <-- Load subjects from Courses table
+    loadCourses();
   }, []);
 
   async function loadStudents() {
     try {
-      const res = await axios.get("http://localhost:5059/api/student");
+      const res = await api.get("/student");   // ✅ UPDATED
       setStudents(res.data);
     } catch (err) {
       console.error("Error loading students:", err);
@@ -27,7 +26,7 @@ export default function AddMarks() {
 
   async function loadCourses() {
     try {
-      const res = await axios.get("http://localhost:5059/api/course");
+      const res = await api.get("/course");   // ✅ UPDATED
       setCourses(res.data);
     } catch (err) {
       console.error("Error loading courses:", err);
@@ -40,23 +39,20 @@ export default function AddMarks() {
       return;
     }
 
-    const selectedStudent = students.find(
-      (s) => s.id === Number(studentId)
-    );
+    const selectedStudent = students.find((s) => s.id === Number(studentId));
 
     const data = {
       studentName: selectedStudent?.name || "",
       subject,
-      score: Number(score)
+      score: Number(score),
     };
 
     try {
-      await axios.post("http://localhost:5059/api/mark", data);
+      await api.post("/mark", data);   // ✅ UPDATED
       alert("Mark added successfully!");
 
       setSubject("");
       setScore("");
-
     } catch (err) {
       console.error(err);
       alert("Error saving mark");
@@ -83,7 +79,7 @@ export default function AddMarks() {
 
       <br /><br />
 
-      {/* SUBJECT DROPDOWN — coming from COURSES */}
+      {/* SUBJECT DROPDOWN */}
       <label>Subject:</label>
       <select
         value={subject}

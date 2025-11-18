@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import api from "../api";   // ✅ use shared axios instance
 
 export default function AddAttendance() {
   const [students, setStudents] = useState([]);
@@ -9,24 +10,30 @@ export default function AddAttendance() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5059/api/student")
-      .then((res) => res.json())
-      .then((data) => setStudents(data));
+    loadStudents();
   }, []);
+
+  async function loadStudents() {
+    try {
+      const res = await api.get("/student");   // ✅ UPDATED
+      setStudents(res.data);
+    } catch (error) {
+      console.error("Failed to load students", error);
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newAttendance = { studentId, subject, date, status };
 
-    const res = await fetch("http://localhost:5059/api/attendance", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newAttendance),
-    });
-
-    const data = await res.json();
-    setMessage(data.message);
+    try {
+      const res = await api.post("/attendance", newAttendance);  // ✅ UPDATED
+      setMessage("Attendance saved successfully!");
+    } catch (err) {
+      console.error(err);
+      setMessage("Failed to save attendance");
+    }
   };
 
   return (
@@ -34,34 +41,37 @@ export default function AddAttendance() {
       <h2>Add Attendance</h2>
 
       <form onSubmit={handleSubmit}>
-        <label>Student:</label><br/>
-        <select value={studentId} onChange={(e) => setStudentId(e.target.value)}>
+        <label>Student:</label><br />
+        <select
+          value={studentId}
+          onChange={(e) => setStudentId(e.target.value)}
+        >
           <option value="">Select Student</option>
           {students.map((s) => (
-            <option key={s.studentId} value={s.studentId}>
+            <option key={s.id} value={s.id}>   {/* ✅ changed studentId → id */}
               {s.name} ({s.rollNo})
             </option>
           ))}
         </select>
-        <br/><br/>
+        <br /><br />
 
-        <input 
-          type="text" 
-          placeholder="Subject" 
+        <input
+          type="text"
+          placeholder="Subject"
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
-        /><br/><br/>
+        /><br /><br />
 
-        <input 
-          type="date" 
+        <input
+          type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-        /><br/><br/>
+        /><br /><br />
 
         <select value={status} onChange={(e) => setStatus(e.target.value)}>
           <option>Present</option>
           <option>Absent</option>
-        </select><br/><br/>
+        </select><br /><br />
 
         <button type="submit">Save Attendance</button>
       </form>

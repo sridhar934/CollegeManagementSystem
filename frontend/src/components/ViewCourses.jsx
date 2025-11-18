@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
 import "./Courses.css";
+import api from "../api"; // ✅ using axios instance
 
 export default function ViewCourses() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5059/api/course")
-      .then((res) => res.json())
-      .then((data) => setCourses(data))
-      .catch(() => setCourses([]));
+    loadCourses();
   }, []);
+
+  async function loadCourses() {
+    try {
+      const res = await api.get("/course");
+      setCourses(res.data);
+    } catch (err) {
+      console.error("Error loading courses:", err);
+      setCourses([]);
+    }
+  }
 
   return (
     <div className="course-container">

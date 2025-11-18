@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import api from "../api"; // ✅ axios instance
 
 export default function ManageStudents() {
   const [students, setStudents] = useState([]);
@@ -11,10 +12,14 @@ export default function ManageStudents() {
   });
 
   // Load students
-  const loadStudents = () => {
-    fetch("http://localhost:5059/api/student")
-      .then((res) => res.json())
-      .then((data) => setStudents(data));
+  const loadStudents = async () => {
+    try {
+      const res = await api.get("/student"); // ✅ updated
+      setStudents(res.data);
+    } catch (err) {
+      console.error("Error loading students:", err);
+      setStudents([]);
+    }
   };
 
   useEffect(() => {
@@ -25,9 +30,12 @@ export default function ManageStudents() {
   const deleteStudent = async (id) => {
     if (!window.confirm("Are you sure to delete this student?")) return;
 
-    await fetch(`http://localhost:5059/api/student/${id}`, { method: "DELETE" });
-
-    loadStudents();
+    try {
+      await api.delete(`/student/${id}`); // ✅ updated
+      loadStudents();
+    } catch (err) {
+      console.error("Delete error:", err);
+    }
   };
 
   // Start editing
@@ -40,16 +48,15 @@ export default function ManageStudents() {
     });
   };
 
-  // Save update
+  // Save edited student
   const saveEdit = async () => {
-    await fetch(`http://localhost:5059/api/student/${editing}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-
-    setEditing(null);
-    loadStudents();
+    try {
+      await api.put(`/student/${editing}`, form); // ✅ updated
+      setEditing(null);
+      loadStudents();
+    } catch (err) {
+      console.error("Update error:", err);
+    }
   };
 
   return (
@@ -74,9 +81,32 @@ export default function ManageStudents() {
 
               {editing === s.studentId ? (
                 <>
-                  <td><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></td>
-                  <td><input value={form.rollNo} onChange={(e) => setForm({ ...form, rollNo: e.target.value })} /></td>
-                  <td><input value={form.course} onChange={(e) => setForm({ ...form, course: e.target.value })} /></td>
+                  <td>
+                    <input
+                      value={form.name}
+                      onChange={(e) =>
+                        setForm({ ...form, name: e.target.value })
+                      }
+                    />
+                  </td>
+
+                  <td>
+                    <input
+                      value={form.rollNo}
+                      onChange={(e) =>
+                        setForm({ ...form, rollNo: e.target.value })
+                      }
+                    />
+                  </td>
+
+                  <td>
+                    <input
+                      value={form.course}
+                      onChange={(e) =>
+                        setForm({ ...form, course: e.target.value })
+                      }
+                    />
+                  </td>
 
                   <td>
                     <button onClick={saveEdit}>Save</button>

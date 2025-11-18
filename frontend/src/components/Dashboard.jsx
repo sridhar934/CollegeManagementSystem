@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
 import Sidebar from "./Sidebar";
+import api from "../api"; // ✅ using axios instance
 
 export default function Dashboard({ role, onLogout }) {
   const [students, setStudents] = useState([]);
@@ -8,21 +9,31 @@ export default function Dashboard({ role, onLogout }) {
   const [marks, setMarks] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5059/api/student")
-      .then((res) => res.json())
-      .then(setStudents)
-      .catch(() => setStudents([]));
-
-    fetch("http://localhost:5059/api/course")
-      .then((res) => res.json())
-      .then(setCourses)
-      .catch(() => setCourses([]));
-
-    fetch("http://localhost:5059/api/mark")
-      .then((res) => res.json())
-      .then(setMarks)
-      .catch(() => setMarks([]));
+    loadDashboardData();
   }, []);
+
+  async function loadDashboardData() {
+    try {
+      const studentRes = await api.get("/student");
+      setStudents(studentRes.data);
+    } catch {
+      setStudents([]);
+    }
+
+    try {
+      const courseRes = await api.get("/course");
+      setCourses(courseRes.data);
+    } catch {
+      setCourses([]);
+    }
+
+    try {
+      const markRes = await api.get("/mark");
+      setMarks(markRes.data);
+    } catch {
+      setMarks([]);
+    }
+  }
 
   return (
     <div className="dash-container">
@@ -32,6 +43,7 @@ export default function Dashboard({ role, onLogout }) {
         <h1 className="dash-title">
           Welcome to CIMS {role === "staff" ? " (Staff Portal)" : " (Student Portal)"}
         </h1>
+
         <p className="dash-subtitle">
           Manage students, courses and academic performance in one place.
         </p>
